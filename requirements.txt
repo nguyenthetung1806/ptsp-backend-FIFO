@@ -19,6 +19,8 @@ gevent
 gunicorn
 mongoengine
 openpyxl
+io
+flask_cors
 bson
 
 datetime
