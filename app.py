@@ -1,12 +1,16 @@
 from flask import Flask, render_template, request, redirect, Response, send_from_directory
 from openpyxl import Workbook, load_workbook
 from io import BytesIO
+from flask_cors import CORS, cross_origin
 
 wb = Workbook()
 ws = wb.active
 
 app = Flask(__name__)
-print('connected')
+CORS(app)
+
+
+
 
 @app.route('/')
 def index():
@@ -14,6 +18,8 @@ def index():
 
 @app.route('/api/fifo', methods=['POST'])
 def api():
+
+    print('ping')
     file = request.files['data']
 
     wb_read = load_workbook(filename=BytesIO(file.read()))
