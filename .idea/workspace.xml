@@ -2,8 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5aeb4402-5e34-4606-95a8-3108d61fedf4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/Procfile" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/Procfile0" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/index.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/requirements.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/requirements0.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/runtime.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/runtime0.txt" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FirstProject.py" afterPath="$PROJECT_DIR$/FirstProject.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.py" afterPath="$PROJECT_DIR$/app.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,8 +25,8 @@
       <file leaf-file-name="FirstProject.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FirstProject.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="882">
-              <caret line="96" column="0" lean-forward="false" selection-start-line="96" selection-start-column="0" selection-end-line="96" selection-end-column="0" />
+            <state relative-caret-position="63">
+              <caret line="3" column="23" lean-forward="false" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -156,8 +164,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/FirstProject.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="882">
-          <caret line="96" column="0" lean-forward="false" selection-start-line="96" selection-start-column="0" selection-end-line="96" selection-end-column="0" />
+        <state relative-caret-position="63">
+          <caret line="3" column="23" lean-forward="false" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="23" />
           <folding />
         </state>
       </provider>

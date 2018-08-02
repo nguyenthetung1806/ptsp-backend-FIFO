@@ -4,6 +4,8 @@ ws = wb.active
 wb_read = load_workbook(filename='Data.xlsx')
 ws_read = wb_read['Sheet1']
 
+print(wb_read)
+
 total_inventory = []
 total_orders = []
 for row in ws_read.rows:
