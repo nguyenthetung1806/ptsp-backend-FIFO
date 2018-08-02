@@ -14,7 +14,7 @@ CORS(app)
 
 @app.route('/')
 def index():
-    return "Hello World"
+    return "hello"
 
 @app.route('/api/fifo', methods=['POST'])
 def api():
