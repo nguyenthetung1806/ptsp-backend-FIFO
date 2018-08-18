@@ -63,7 +63,7 @@ def api():
     # Save the result
     writer.save()
 
-    return send_from_directory('./','Result.xlsx', as_attachment=True)
+    return send_from_directory('./','example_result.xlsx', as_attachment=True)
 
 
 
