@@ -23,5 +23,5 @@ flask_cors
 bson
 pandas
 XlsxWriter
-
+xlrd
 datetime
