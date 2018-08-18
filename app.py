@@ -20,101 +20,47 @@ def index():
 def api():
 
     print('ping')
-    file = request.files['data']
+    file_req = request.files['data']
 
-    wb_read = load_workbook(filename=BytesIO(file.read()))
-    ws_read = wb_read['Sheet1']
 
-    total_inventory = []
-    total_orders = []
-    for row in ws_read.rows:
-        a = []
-        a.append(row[3].value)
-        a.append(row[2].value)
-        a.append(row[5].value)
-        a.append(row[6].value)
-        total_orders.append(a)
+    writer = pd.ExcelWriter('example_result.xlsx', engine='xlsxwriter')
 
-    tickers = []
-    for i in total_inventory:
-        if i[1] not in tickers:
-            tickers.append(i[1])
-    for i in total_orders:
-        if i[1] not in tickers:
-            tickers.append(i[1])
-    all_data = []
-    for ticker in tickers:
-        append_inv = []
-        append_order = []
-        for i in total_inventory:
-            if i[1] == ticker:
-                append_inv.append(i)
-        for i in total_orders:
-            if i[1] == ticker:
-                append_order.append(i)
-        a = {   'ticker' : ticker,
-                'inventory' : append_inv,
-                'orders': append_order
-        }
-        all_data.append(a)
 
-        # start the FIFO method
-    for data in all_data:
-        ws.append(['Position', 'Ticker','Vol','Price','Average_Matched_Price', 'Profit FIFO'])
+    file = filename=BytesIO(file_req.read())
 
-        # setupdata
-        inventory = data['inventory']
-        orders = data['orders']
+    xl = pd.ExcelFile(file)
 
-        for order in orders:
-            if not len(inventory) != 0 or order[0] == inventory[0][0]:
-                inventory.append(order)
-                order.extend(['inv stack',0])
-                ws.append(order)
+    # Load a sheet into a DataFrame by name: df1
+    df0 = xl.parse(xl.sheet_names[0])
+
+    df1 = df0[['SYMBOL','SIDE','QTTY','PRICE']].copy()
+    df_sell = df1.loc[df1['SIDE'] == 'S']
+    df_buy = df1.loc[df1['SIDE'] == 'B']
+
+    df1["TotalPrice"] = 0
+
+    inventory = []
+    inventory_side =  df1.iloc[0]['SIDE']
+    for index, row in df1.iterrows():
+        for i in range(row['QTTY']):
+            if inventory_side == 'No_side':
+                inventory_side = row['SIDE']
+            if inventory_side == (row['SIDE']):
+                inventory.append( row['PRICE'] )
             else:
-                prices = []
-                total_inv = 0
-                prices_if = []
-                for inv in inventory:
-                    total_inv += inv[2]
-                    prices_if.append(inv[3])
-                if total_inv < order[2]:
-                    ws.append([
-                                order[0],
-                                order[1],
-                                total_inv,
-                                order[3],
-                                "inv stack",
-                                0
-                             ])
-                    if order[0] == "Mua":
-                        profit = -(order[2] - total_inv)*(order[3] - sum(prices_if)/len(prices_if))
-                    else:
-                        profit = (order[2] - total_inv)*(order[3] - sum(prices_if)/len(prices_if))
-                    ws.append([
-                                order[0],
-                                order[1],
-                                order[2] - total_inv,
-                                order[3],
-                                sum(prices_if)/len(prices_if),
-                                profit
-                            ])
-                else:
-                    for i in range (0, order[2]):
-                        prices.append(inventory[0][3])
-                        inventory[0][2] -= 1
-                        if inventory[0][2] == 0:
-                            inventory.pop(0)
-                    if order[0] == "Mua":
-                        profit = -(order[2])*(order[3] - sum(prices)/len(prices))
-                    else:
-                        profit = (order[2])*(order[3] - sum(prices)/len(prices))
-                    order.extend([sum(prices)/len(prices), profit  ])
-                    ws.append(order)
+                total_price_last = inventory[0] + df1.loc[index, 'TotalPrice']
+                df1.loc[index, 'TotalPrice'] = total_price_last
+                del inventory[0]
+                if len(inventory) == 0:
+                    inventory_side = 'No_side'
+
+    df1['Average Matched Price'] = df1['TotalPrice'] / df1['QTTY']
 
 
-    # wb.save("Result.xlsx")
-    wb.save('Result.xlsx')
+    # Write your DataFrame to a file
+    df1.to_excel(writer, 'Sheet1')
+    # Save the result
+    writer.save()
 
     return send_from_directory('./','Result.xlsx', as_attachment=True)
 

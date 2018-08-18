@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Coda/.idea/Coda.iml" filepath="$PROJECT_DIR$/../Coda/.idea/Coda.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/FIFO VFM.iml" filepath="$PROJECT_DIR$/.idea/FIFO VFM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../TensorFlow/.idea/TensorFlow.iml" filepath="$PROJECT_DIR$/../TensorFlow/.idea/TensorFlow.iml" />
     </modules>
   </component>
 </project>
