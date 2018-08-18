@@ -22,5 +22,6 @@ openpyxl
 flask_cors
 bson
 pandas
+XlsxWriter
 
 datetime
