@@ -24,4 +24,5 @@ bson
 pandas
 XlsxWriter
 xlrd
+numpy
 datetime
