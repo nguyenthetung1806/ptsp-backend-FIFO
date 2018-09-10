@@ -6,6 +6,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="TensorFlow" />
     <orderEntry type="module" module-name="Coda" />
+    <orderEntry type="module" module-name="Scripts" />
+    <orderEntry type="module" module-name="Script" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="Nosetests" />
