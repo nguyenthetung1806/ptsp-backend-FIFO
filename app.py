@@ -25,8 +25,8 @@ def api():
     req_CF0079 = request.files['CF0079']
     req_OD0024 = request.files['OD0024']
 
-    CF0079 = filename=BytesIO(req_CF0079.read())
-    OD0024 = filename=BytesIO(req_OD0024.read())
+    CF0079 = BytesIO(req_CF0079.read())
+    OD0024 = BytesIO(req_OD0024.read())
 
     writer = pd.ExcelWriter('Result.xlsx', engine='xlsxwriter')
 
