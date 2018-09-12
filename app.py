@@ -65,19 +65,19 @@ def api():
 
     # Clear FI
     df_OD0024['Hạng(Abv)'] = np.where((df_OD0024['MG chính'].notnull()) & (df_OD0024['Nhóm QL'].isnull()), 'Khác', df_OD0024['Hạng(Abv)'])
-    df_OD0024['Hạng(Short)'] = np.where((df_OD0024['MG chính'].notnull()) & (df_OD0024['Nhóm QL'].isnull()), 'Khác', df_OD0024['Hạng(Short)'])
+    df_OD0024['Hạng(Short)'] = np.where((df_OD0024['Hạng(Abv)'] == 'Khác'), 'Khác', df_OD0024['Hạng(Short)'])
 
 
 
-    # Speedup the speed by eliminate those whose inrelevant
-    df_CF0079_TVDT = df_CF0079.dropna(subset=['MG chính']).copy()
-
-    for i in ['TVĐTMM', 'TVĐTVIP', 'TVĐT']:
-        checkCondition = lambda row: len(df_CF0079_TVDT[
-                                                  (df_CF0079_TVDT['Hạng(Abv)'] == i) & (df_CF0079_TVDT['MG chính'] == row['MG chính'])
-                                              ])
-        head_name = 'Số khách ' + i
-        df_OD0024[head_name] = df_OD0024.apply(checkCondition, axis=1)
+    # # Speedup the speed by eliminate those whose inrelevant
+    # df_CF0079_TVDT = df_CF0079.dropna(subset=['MG chính']).copy()
+    #
+    # for i in ['TVĐTMM', 'TVĐTVIP', 'TVĐT']:
+    #     checkCondition = lambda row: len(df_CF0079_TVDT[
+    #                                               (df_CF0079_TVDT['Hạng(Abv)'] == i) & (df_CF0079_TVDT['MG chính'] == row['MG chính'])
+    #                                           ])
+    #     head_name = 'Số khách ' + i
+    #     df_OD0024[head_name] = df_OD0024.apply(checkCondition, axis=1)
 
 
     # Specify a writer
