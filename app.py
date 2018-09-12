@@ -17,8 +17,8 @@ CORS(app)
 def index():
     return "hello"
 
-@app.route('/api/fifo', methods=['POST'])
-def api():
+@app.route('/api/CF44', methods=['POST'])
+def CF44():
     print('ping')
     writer = pd.ExcelWriter('example_result.xlsx', engine='xlsxwriter')
 
@@ -67,18 +67,24 @@ def api():
     df_OD0024['Hạng(Abv)'] = np.where((df_OD0024['MG chính'].notnull()) & (df_OD0024['Nhóm QL'].isnull()), 'Khác', df_OD0024['Hạng(Abv)'])
     df_OD0024['Hạng(Short)'] = np.where((df_OD0024['Hạng(Abv)'] == 'Khác'), 'Khác', df_OD0024['Hạng(Short)'])
 
+    return redirect(url_for('/api/api/CF44_cont', df_CF0079 = df_CF0079, df_OD0024 = df_OD0024))
 
 
-    # # Speedup the speed by eliminate those whose inrelevant
-    # df_CF0079_TVDT = df_CF0079.dropna(subset=['MG chính']).copy()
-    #
-    # for i in ['TVĐTMM', 'TVĐTVIP', 'TVĐT']:
-    #     checkCondition = lambda row: len(df_CF0079_TVDT[
-    #                                               (df_CF0079_TVDT['Hạng(Abv)'] == i) & (df_CF0079_TVDT['MG chính'] == row['MG chính'])
-    #                                           ])
-    #     head_name = 'Số khách ' + i
-    #     df_OD0024[head_name] = df_OD0024.apply(checkCondition, axis=1)
 
+
+@app.route('/api/CF44_cont', methods=['POST'])
+def CF44_cont():
+    df_CF0079 = request.args['df_CF0079']
+    df_OD0024 = request.args['df_OD0024']
+    # Speedup the speed by eliminate those whose inrelevant
+    df_CF0079_TVDT = df_CF0079.dropna(subset=['MG chính']).copy()
+
+    for i in ['TVĐTMM', 'TVĐTVIP', 'TVĐT']:
+        checkCondition = lambda row: len(df_CF0079_TVDT[
+                                                  (df_CF0079_TVDT['Hạng(Abv)'] == i) & (df_CF0079_TVDT['MG chính'] == row['MG chính'])
+                                              ])
+        head_name = 'Số khách ' + i
+        df_OD0024[head_name] = df_OD0024.apply(checkCondition, axis=1)
 
     # Specify a writer
     writer = pd.ExcelWriter('Result.xlsx', engine='xlsxwriter')
@@ -87,13 +93,7 @@ def api():
     # Save the result
     writer.save()
 
-
-
-
-
     return send_from_directory('./','Result.xlsx', as_attachment=True)
-
-
 
 
 
