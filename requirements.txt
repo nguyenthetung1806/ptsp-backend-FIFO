@@ -26,3 +26,5 @@ XlsxWriter
 xlrd
 numpy
 datetime
+BeautifulSoup
+urllib.request

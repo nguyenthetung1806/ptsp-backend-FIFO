@@ -4,6 +4,8 @@ from io import BytesIO
 import pandas as pd
 import numpy as np
 from flask_cors import CORS, cross_origin
+import urllib.request as urllib
+from bs4 import BeautifulSoup
 
 wb = Workbook()
 ws = wb.active
@@ -67,24 +69,36 @@ def CF44():
     df_OD0024['Hạng(Abv)'] = np.where((df_OD0024['MG chính'].notnull()) & (df_OD0024['Nhóm QL'].isnull()), 'Khác', df_OD0024['Hạng(Abv)'])
     df_OD0024['Hạng(Short)'] = np.where((df_OD0024['Hạng(Abv)'] == 'Khác'), 'Khác', df_OD0024['Hạng(Short)'])
 
-    return redirect(url_for('/api/api/CF44_cont', df_CF0079 = df_CF0079, df_OD0024 = df_OD0024))
 
+    list =[]
+    # specify the url
+    quote_pages = [   'http://s.cafef.vn/Lich-su-giao-dich-Symbol-VNINDEX/Trang-1-0-tab-1.chn',
+                      'http://s.cafef.vn/Lich-su-giao-dich-UPCOM-INDEX-1.chn',
+                      'http://s.cafef.vn/Lich-su-giao-dich-HNX-INDEX-1.chn'
+    ]
 
+    for page in quote_pages:
+       # query the website and return the html to the variable ‘page’
+       page = urllib.urlopen(page)
 
+       # parse the html using beautiful soup and store in variable `soup`
+       soup = BeautifulSoup(page, 'html.parser')
 
-@app.route('/api/CF44_cont', methods=['POST'])
-def CF44_cont():
-    df_CF0079 = request.args['df_CF0079']
-    df_OD0024 = request.args['df_OD0024']
-    # Speedup the speed by eliminate those whose inrelevant
-    df_CF0079_TVDT = df_CF0079.dropna(subset=['MG chính']).copy()
+       # Take out the <div> of name and get its value
+       table = soup.select_one('table:nth-of-type(2)')
+       name = table.select_one('tr:nth-of-type(4)')
+       list.append(int(name.select_one("td:nth-of-type(6)").text.strip().replace(',','')))
+       list.append(int(name.select_one("td:nth-of-type(8)").text.strip().replace(',','')))
 
-    for i in ['TVĐTMM', 'TVĐTVIP', 'TVĐT']:
-        checkCondition = lambda row: len(df_CF0079_TVDT[
-                                                  (df_CF0079_TVDT['Hạng(Abv)'] == i) & (df_CF0079_TVDT['MG chính'] == row['MG chính'])
-                                              ])
-        head_name = 'Số khách ' + i
-        df_OD0024[head_name] = df_OD0024.apply(checkCondition, axis=1)
+    GTGD_Market = 2*sum(list)
+    df_OD0024_GTGD = df_OD0024[df_OD0024['Hạng(Abv)'] != "Khác"].copy()
+    GTGD_VCBS = df_OD0024_GTGD['Giá trị giao dịch'].sum()
+    GTGD_M_exc_VCBS = GTGD_Market - GTGD_VCBS
+
+    df_Market = pd.DataFrame([['Thị trường_exc VCBS', GTGD_M_exc_VCBS, 'Thị trường']], columns=['Tên khách hàng','Giá trị giao dịch','Hạng(Abv)'])
+    print(df_Market)
+    df_OD0024 = df_OD0024.append(df_Market, sort=False, ignore_index=True)
+    print(df_OD0024)
 
     # Specify a writer
     writer = pd.ExcelWriter('Result.xlsx', engine='xlsxwriter')
@@ -94,6 +108,8 @@ def CF44_cont():
     writer.save()
 
     return send_from_directory('./','Result.xlsx', as_attachment=True)
+
+
 
 
 
