@@ -19,7 +19,7 @@ CORS(app)
 def index():
     return "hello"
 
-@app.route('/api/take-ticker-list', methods='GET')
+@app.route('/api/take-ticker-list')
 def take_ticker_list():
     print('ping')
     floorCode = ['10', '02', '03']
