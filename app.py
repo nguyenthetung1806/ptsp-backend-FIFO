@@ -109,7 +109,7 @@ def CF44():
     return send_from_directory('./','Result.xlsx', as_attachment=True)
 
 
-@app.route('/api/take-ticker-list', methods=['GET'])
+@app.route('/api/take-ticker-list', methods='GET')
 def take_ticker_list():
     print('ping')
     floorCode = ['10', '02', '03']
