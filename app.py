@@ -6,6 +6,7 @@ import numpy as np
 from flask_cors import CORS, cross_origin
 import urllib.request as urllib
 from bs4 import BeautifulSoup
+import json
 
 wb = Workbook()
 ws = wb.active
@@ -63,8 +64,6 @@ def CF44():
     # Set that all TK that have no Hạng(Abv) or Hạng(Short) are Khác
     df_OD0024.fillna(value={'Hạng(Abv)': 'Khác', 'Hạng(Short)': 'Khác'}, inplace=True)
 
-
-
     # Clear FI
     df_OD0024['Hạng(Abv)'] = np.where((df_OD0024['MG chính'].notnull()) & (df_OD0024['Nhóm QL'].isnull()), 'Khác', df_OD0024['Hạng(Abv)'])
     df_OD0024['Hạng(Short)'] = np.where((df_OD0024['Hạng(Abv)'] == 'Khác'), 'Khác', df_OD0024['Hạng(Short)'])
@@ -109,6 +108,38 @@ def CF44():
 
     return send_from_directory('./','Result.xlsx', as_attachment=True)
 
+
+@app.route('/api/take-ticker-list', methods=['GET'])
+def take_ticker_list():
+    print('ping')
+    floorCode = ['10', '02', '03']
+
+    list_ticker = []
+
+    for code in floorCode:
+        response = urllib.urlopen("https://price-fpt-08.vndirect.com.vn/priceservice/secinfo/snapshot/q=floorCode:{}".format(code))
+        data = response.read()
+        data = json.loads(data)
+        data = data[code]
+
+        for data_item in data:
+            item_seperator = [pos for pos, char in enumerate(data_item) if char == "|"]
+            if (item_seperator[0] + 1) != item_seperator[1]:
+                lower_sep = item_seperator[2] + 1
+                upper_sep = item_seperator[3]
+                ticker = data_item[int(lower_sep): int(upper_sep)]
+                list_ticker.append(ticker)
+
+    df = pd.DataFrame(np.array(list_ticker))
+
+    # Specify a writer
+    writer = pd.ExcelWriter('Result.xlsx', engine='xlsxwriter')
+    # Write your DataFrame to a file
+    df.to_excel(writer, 'Sheet1')
+    # Save the result
+    writer.save()
+
+    return send_from_directory('./','Result.xlsx', as_attachment=True)
 
 
 
