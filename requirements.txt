@@ -27,3 +27,5 @@ xlrd
 numpy
 datetime
 BeautifulSoup4
+json
+urllib.request
